@@ -1,5 +1,6 @@
 from abc import *
 from enum import Enum
+import agent.interaction.message_lib as message_lib
 
 class AgentStatus(Enum):
     CREATED = 0
@@ -23,21 +24,21 @@ class BaseAgent(metaclass=ABCMeta):
 
     @abstractmethod
     def on_subscribe(self, sender:str, message:str):
-        pass
+        return message_lib.MessagePermission.DENIED 
 
     @abstractmethod
     def on_unsubscribe(self, sender:str, message:str):
-        pass
+        pass 
 
     @abstractmethod
-    def on_request(self, sendder:str, message:str):
-        pass
+    def on_request(self, sender:str, message:str):
+        return message_lib.MessagePermission.DENIED
 
     @abstractmethod
     def on_response(self, sender:str, message:str):
         pass
 
-    def publish(self, receiver:str, message:str):
+    def publish(self, message:str):
         pass
 
     def request(self, receiver:str, message:str):
