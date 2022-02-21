@@ -1,3 +1,4 @@
 *.pptx
 *.exe
 *.txt
+framework/message_util/google/
