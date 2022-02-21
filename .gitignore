@@ -1,4 +1,4 @@
 *.pptx
 *.exe
 *.txt
-framework/message_util/google/
+framework/messaging_service/google/
