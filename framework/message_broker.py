@@ -16,13 +16,21 @@ class MessageBroker(PIA_message_grpc.PIAMessageServiceServicer):
         thread = Thread(target=self.server.wait_for_termination())
         thread.start()
 
-    def on_publish(self, ):
+    def generate_key(self, ):
+        pass
+
+    def on_publish(self, publisher:str, message:PIA_message.PublishMessage):
+        # TODO generate message_key
+        # TODO unmarshal message
+        blackboard.req_publish()
         pass
 
     def on_subscribe(self, ):
+        blackboard.req_subscribe()
         pass
 
     def on_unsubscribe(self,):
+        blackboard.req_unsubscribe()
         pass
 
     def on_request(self,):
