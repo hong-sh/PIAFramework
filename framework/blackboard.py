@@ -10,9 +10,14 @@ class BlackBoard:
         except Exception as e:
             print('redis connect error occurred : ', e)
 
-    def req_publish(self, publisher:str, message:str):
-        
+    def req_publish(self, publisher:str, key:str, value:dict):
         self.redis_cli.publish()
+        pass
 
-    def req_subscribe(self, subscriber:str, receiver:str, message:str):
+    def req_subscribe(self, subscriber:str, receiver:str, subscribe_pattern:str):
+        self.redis_cli.pubsub()
+        pass
+
+    def req_unsubscribe(self, subscirber:str, receiver:str, unsubscribe_pattern:str):
+        self.redis_cli.pubsub()
         pass
