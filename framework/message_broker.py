@@ -24,7 +24,6 @@ class MessageBroker(PIA_message_grpc.PIAMessageServiceServicer):
         publish_key = message.publish_key
         publish_value = message.publish_value
         self.blackboard.req_publish(message_id, publisher, receiver, publish_key, publish_value)
-        
 
     def on_subscribe(self, message:PIA_message.SubscribeMessage):
         message_id = message.message_id
@@ -37,7 +36,6 @@ class MessageBroker(PIA_message_grpc.PIAMessageServiceServicer):
         response.response_status = result["response_status"]
         response.subscribe_message = message
         return response
-
 
     def on_unsubscribe(self, message:PIA_message.SubscribeMessage):
         message_id = message.message_id
@@ -59,7 +57,6 @@ class MessageBroker(PIA_message_grpc.PIAMessageServiceServicer):
         request_value = message.request_value
         self.blackboard.req_request(message_id, requester, receiver, request_key, request_value)
 
-        
 class PIAMessageService(PIA_message_grpc.PIAMessageServiceServicer):
     def __init__(self, message_broker:MessageBroker):
         self.message_broker = message_broker
