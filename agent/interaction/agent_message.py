@@ -1,5 +1,5 @@
-from enum import Enum
+import PIA_message_pb2 as PIA_message
 
-class MessagePermission(Enum):
-    ALLOW = 0
-    DENIED = 1
+
+def create_pub_message(agent_uri:str, message_id:int, publisher:)
+
