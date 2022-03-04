@@ -26,7 +26,7 @@ class BlackBoardClient:
             message = self.subscribe.get_message()
             if message['type'] == 'message' or message['type'] == 'pmessage':
                 agent_uri, message_type, message_key = message['channel'].split("/")
-                if message_type in self.callbacks:
+                if message_type in self.callbacks: 
                     self.callbacks[message_type](agent_uri, message_key, message['data'])
 
     def req_publish(self, key:str, value:dict):
