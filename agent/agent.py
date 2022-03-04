@@ -17,10 +17,10 @@ class BaseAgent(metaclass=ABCMeta):
     @abstractmethod
     def on_start(self):
         callbacks = {
-            "subscribe":self.on_subscribe, 
-            "unsubscribe":self.on_unsubscribe,
-            "request":self.on_request,
-            "response":self.on_response
+            "subscribe" : self.on_subscribe, 
+            "unsubscribe" : self.on_unsubscribe,
+            "request" : self.on_request,
+            "response" : self.on_response
             }
         self.blackboard_cli = BlackBoardClient(self.agent_uri, self.blackboard_url, callbacks)
     
@@ -30,15 +30,15 @@ class BaseAgent(metaclass=ABCMeta):
 
     @abstractmethod
     def on_subscribe(self, sender:str, message:str):
-        return message_client.MessagePermission.DENIED 
+        pass
 
     @abstractmethod
     def on_unsubscribe(self, sender:str, message:str):
-        pass 
+        pass
 
     @abstractmethod
     def on_request(self, sender:str, message:str):
-        return message_client.MessagePermission.DENIED
+        pass
 
     @abstractmethod
     def on_response(self, sender:str, message:str):

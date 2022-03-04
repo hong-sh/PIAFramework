@@ -21,6 +21,9 @@ class BlackBoardClient:
         self.subscribe.psubscribe(self.agent_uri+"/request/*")
         self.subscribe.psubscribe(self.agent_uri+"/response/*")
 
+    def set_callback(self, key:str, callback:object):
+        self.callbacks[key] = callback
+
     def on_subscribe(self):
         while True:
             message = self.subscribe.get_message()
@@ -51,3 +54,7 @@ class BlackBoardClient:
     def req_request(self, receiver:str, key:str, value:dict):
         req_key = receiver + '/request/' + self.agent_uri + '/' + key
         self.redis_cli.publish(req_key, value)
+
+    def req_response(self, receiver:str, key:str, value:dict):
+        res_key = receiver + '/response/' + self.agent_uri + '/' + key
+        self.redis_cli.publish(res_key, value)
