@@ -47,3 +47,7 @@ class BlackBoardClient:
             self.subscribe.punsubscribe(unubscribe_key)
         else:
             self.subscribe.unsubscribe(unubscribe_key)
+
+    def req_request(self, receiver:str, key:str, value:dict):
+        req_key = receiver + '/request/' + self.agent_uri + '/' + key
+        self.redis_cli.publish(req_key, value)

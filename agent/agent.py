@@ -1,6 +1,6 @@
 from abc import *
 from enum import Enum
-import agent.interaction.message_client as message_client
+from agent.blackboard_cli import BlackBoardClient
 
 class AgentStatus(Enum):
     CREATED = 0
@@ -16,7 +16,13 @@ class BaseAgent(metaclass=ABCMeta):
 
     @abstractmethod
     def on_start(self):
-        pass
+        callbacks = {
+            "subscribe":self.on_subscribe, 
+            "unsubscribe":self.on_unsubscribe,
+            "request":self.on_request,
+            "response":self.on_response
+            }
+        self.blackboard_cli = BlackBoardClient(self.agent_uri, self.blackboard_url, callbacks)
     
     @abstractmethod
     def on_stop(self):
