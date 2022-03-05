@@ -17,10 +17,10 @@ class BaseAgent(metaclass=ABCMeta):
     @abstractmethod
     def on_start(self):
         callbacks = {
-            "subscribe" : self.on_subscribe, 
-            "unsubscribe" : self.on_unsubscribe,
-            "request" : self.on_request,
-            "response" : self.on_response
+            "on_subscribe" : self.on_subscribe, 
+            "on_unsubscribe" : self.on_unsubscribe,
+            "on_request" : self.on_request,
+            "on_response" : self.on_response
             }
         self.blackboard_cli = BlackBoardClient(self.agent_uri, self.blackboard_url, callbacks)
     
