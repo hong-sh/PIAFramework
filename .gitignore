@@ -1,4 +1,5 @@
 *.pptx
 *.exe
 *.txt
-framework/messaging_service/google/
+framework/messaging_service/
+framework/message_broker.py
