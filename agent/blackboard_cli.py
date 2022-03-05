@@ -1,6 +1,14 @@
 import redis
 from threading import Thread
 
+'''
+Message Protocol
+publish message : agent-uri/publish/key/value
+subscribe(unsubscribe) message : agent-uri/subscribe(unsubscribe)/publisher-uri/key
+request message : agent-uri/request/receiver-uri/message_id/value
+response message : agent-uri/response/receiver-uri/message_id/value
+
+'''
 
 class BlackBoardClient:
     def __init__(self, agent_uri:str, blackboard_url:str, callbacks:object):
@@ -12,19 +20,20 @@ class BlackBoardClient:
             self.redis_cli = redis.Redis(host=host, port=port, db=0)
             self.subscribe = self.redis_cli.pubsub()
             self.initialize_topic()
-            self.on_sub_thread = Thread(target=self.on_subscribe())
-            self.on_sub_thread.start()
+            self.on_noti_thread = Thread(target=self.on_notify()).start()
         except Exception as e:
             print('redis connect error occurred : ', e)
 
     def initialize_topic(self):
-        self.subscribe.psubscribe(self.agent_uri+"/request/*")
-        self.subscribe.psubscribe(self.agent_uri+"/response/*")
+        self.subscribe.psubscribe("*/subscribe/" + self.agent_uri + "/*")
+        self.subscribe.psubscribe("*/unsubscribe/" + self.agent_uri + "/*")
+        self.subscribe.psubscribe("*/request/" + self.agent_uri + "/*")
+        self.subscribe.psubscribe("*/response/" + self.agent_uri + "/*")
 
     def set_callback(self, key:str, callback:object):
         self.callbacks[key] = callback
 
-    def on_subscribe(self):
+    def on_notify(self):
         while True:
             message = self.subscribe.get_message()
             if message['type'] == 'message' or message['type'] == 'pmessage':
@@ -38,14 +47,14 @@ class BlackBoardClient:
         pass
 
     def req_subscribe(self, publisher:str, is_pattern:bool, key:str):
-        subscribe_key = publisher + "/publish/" + key
+        subscribe_key = publisher + "/subscribe/" + key
         if is_pattern:
             self.subscribe.psubscribe(subscribe_key)
         else:
             self.subscribe.subscribe(subscribe_key)
 
     def req_unsubscribe(self, publisher:str, is_pattern:bool, key:str):
-        unubscribe_key = publisher + "/publish/" + key
+        unubscribe_key = publisher + "/unsubscribe/" + key
         if is_pattern:
             self.subscribe.punsubscribe(unubscribe_key)
         else:

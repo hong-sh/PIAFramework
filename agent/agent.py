@@ -29,11 +29,14 @@ class BaseAgent(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def on_subscribe(self, sender:str, message:str):
+    def on_subscribe(self, requester:str, key:str):
         pass
 
     @abstractmethod
-    def on_unsubscribe(self, sender:str, message:str):
+    def on_unsubscribe(self, :str, message:str):
+        pass
+
+    def on_notify(self, publisher:str, key:str, value:dict):
         pass
 
     @abstractmethod
