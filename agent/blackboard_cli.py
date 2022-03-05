@@ -29,6 +29,12 @@ class BlackBoardClient:
         self.subscribe.psubscribe("request/*/" + self.agent_uri + "/*")
         self.subscribe.psubscribe("response/*/" + self.agent_uri + "/*")
 
+    def destroy_topic(self):
+        self.subscribe.punsubscribe("subscribe/*/" + self.agent_uri + "/*")
+        self.subscribe.punsubscribe("unsubscribe/*/" + self.agent_uri + "/*")
+        self.subscribe.punsubscribe("request/*/" + self.agent_uri + "/*")
+        self.subscribe.punsubscribe("response/*/" + self.agent_uri + "/*")
+
     def on_notify(self):
         while True:
             message = self.subscribe.get_message()
@@ -44,6 +50,8 @@ class BlackBoardClient:
                         self.callbacks["on_request"](requester=splitted_channel[1], message_id=splitted_channel[3], task=message['data'])
                     elif message_type == "response":
                         self.callbacks["on_response"](responser=splitted_channel[1], message_id=splitted_channel[3], result=message['data'])
+                    elif message_type == "publish":
+                        self.callbacks[splitted_channel[1]+"/"+splitted_channel[2]](value=message['data'])
 
     def req_publish(self, key:str, value:dict):
         pub_key = "publish/" + self.agent_uri + "/" + key
