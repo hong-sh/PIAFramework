@@ -7,7 +7,6 @@ publish message : publish/agent-uri/key, value
 subscribe(unsubscribe) message : subscribe(unsubscribe)/agent-uri/publisher-uri, key
 request message : request/agent-uri/receiver-uri/message_id, task
 response message : response/agent-uri/receiver-uri/message_id, result
-
 '''
 
 class BlackBoardClient:
@@ -29,9 +28,6 @@ class BlackBoardClient:
         self.subscribe.psubscribe("unsubscribe/*/" + self.agent_uri + "/*")
         self.subscribe.psubscribe("request/*/" + self.agent_uri + "/*")
         self.subscribe.psubscribe("response/*/" + self.agent_uri + "/*")
-
-    def set_callback(self, key:str, callback:object):
-        self.callbacks[key] = callback
 
     def on_notify(self):
         while True:
@@ -77,9 +73,9 @@ class BlackBoardClient:
         del self.callbacks[unubscribe_key]
 
     def req_request(self, receiver:str, message_id:str, task:dict):
-        req_key = receiver + "request/" + self.agent_uri + "/" + receiver + "/" + message_id
+        req_key = "request/" + self.agent_uri + "/" + receiver + "/" + message_id
         self.redis_cli.publish(req_key, task)
 
     def req_response(self, receiver:str, message_id:str, task:dict):
-        res_key = receiver + "response/" + self.agent_uri + "/" + receiver + "/" + message_id
+        res_key = "response/" + self.agent_uri + "/" + receiver + "/" + message_id
         self.redis_cli.publish(res_key, task)
