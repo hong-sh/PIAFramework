@@ -3,10 +3,10 @@ from threading import Thread
 
 '''
 Message Protocol
-publish message : agent-uri/publish/key/value
-subscribe(unsubscribe) message : agent-uri/subscribe(unsubscribe)/publisher-uri/key
-request message : agent-uri/request/receiver-uri/message_id/value
-response message : agent-uri/response/receiver-uri/message_id/value
+publish message : agent-uri/publish/key, value
+subscribe(unsubscribe) message : subscribe(unsubscribe)/agent-uri/publisher-uri, key
+request message : request/agent-uri/receiver-uri/message_id, value
+response message : response/agent-uri/receiver-uri/message_id, value
 
 '''
 
@@ -25,10 +25,10 @@ class BlackBoardClient:
             print('redis connect error occurred : ', e)
 
     def initialize_topic(self):
-        self.subscribe.psubscribe("*/subscribe/" + self.agent_uri + "/*")
-        self.subscribe.psubscribe("*/unsubscribe/" + self.agent_uri + "/*")
-        self.subscribe.psubscribe("*/request/" + self.agent_uri + "/*")
-        self.subscribe.psubscribe("*/response/" + self.agent_uri + "/*")
+        self.subscribe.psubscribe("subscribe/*/" + self.agent_uri + "/*")
+        self.subscribe.psubscribe("unsubscribe/*/" + self.agent_uri + "/*")
+        self.subscribe.psubscribe("request/*/" + self.agent_uri + "/*")
+        self.subscribe.psubscribe("response/*/" + self.agent_uri + "/*")
 
     def set_callback(self, key:str, callback:object):
         self.callbacks[key] = callback
@@ -37,21 +37,31 @@ class BlackBoardClient:
         while True:
             message = self.subscribe.get_message()
             if message['type'] == 'message' or message['type'] == 'pmessage':
-                agent_uri, message_type, message_key = message['channel'].split("/")
-                if message_type in self.callbacks: 
-                    self.callbacks[message_type](agent_uri, message_key, message['data'])
+                splitted_channel = message['channel'].split("/")
+                message_type = splitted_channel[0]
+                if splitted_channel[1] in self.callbacks: 
+                    if message_type == "subscribe":
+                        pass
+                    elif message_type == "unsubscribe":
+                        pass
+                    elif message_type == "request":
+                        pass
+                    elif message_type == "response":
+                        pass
 
     def req_publish(self, key:str, value:dict):
         pub_key = self.agent_uri + '/publish/' + key
         self.redis_cli.publish(pub_key, value)
         pass
 
-    def req_subscribe(self, publisher:str, is_pattern:bool, key:str):
-        subscribe_key = publisher + "/subscribe/" + key
+    def req_subscribe(self, publisher:str, is_pattern:bool, key:str, callback:object):
+        publish_key = self.agent_uri + "/subscribe/" + publisher + 
+        subscribe_key = publisher + "/publish/" + key
         if is_pattern:
             self.subscribe.psubscribe(subscribe_key)
         else:
             self.subscribe.subscribe(subscribe_key)
+        self.redis_cli.publish()
 
     def req_unsubscribe(self, publisher:str, is_pattern:bool, key:str):
         unubscribe_key = publisher + "/unsubscribe/" + key
