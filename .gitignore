@@ -1,5 +1,4 @@
 *.pptx
 *.exe
-*.txt
 framework/messaging_service/
 framework/message_broker.py
