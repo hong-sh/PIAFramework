@@ -33,6 +33,7 @@ class BaseAgent(metaclass=ABCMeta):
         self.response_lock = Lock()
         self.response_buffer = {}
         self.agent_status = AgentStatus.RUNNING
+        
 
     @abstractmethod
     def on_stop(self):
