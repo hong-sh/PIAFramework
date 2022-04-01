@@ -4,4 +4,3 @@
 - Framework manage agents lifecycle
 - Provide Publish-Subscribe machanism through Blackboard
 - Provide Request-Response machnism to directly interaction between agents
-- 
